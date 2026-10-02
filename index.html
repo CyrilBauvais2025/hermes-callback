@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assistant Budget, retour d'autorisation</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         margin: 0; padding: 2rem; background: #0f172a; color: #e2e8f0; }
+  h1 { font-size: 1.25rem; margin: 0 0 .5rem; }
+  p  { color: #94a3b8; line-height: 1.5; }
+  textarea { width: 100%; height: 9rem; margin-top: 1rem; padding: .75rem; font-size: .8rem;
+             font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: #0f172a;
+             background: #f8fafc; border: 1px solid #334155; border-radius: .5rem; }
+  button { margin-top: .75rem; padding: .6rem 1rem; font-size: .95rem; border: 0;
+           border-radius: .5rem; background: #22c55e; color: #052e16; font-weight: 600;
+           cursor: pointer; }
+  .etat { color: #22c55e; margin-left: .75rem; font-size: .9rem; }
+  .vide { color: #f59e0b; }
+</style>
+</head>
+<body>
+  <h1>Assistant Budget, retour d'autorisation</h1>
+  <p>Cette page ne fait rien d'autre que d'afficher l'adresse reçue pour que tu puisses la
+     transmettre à l'assistant. Aucun code n'est envoyé nulle part, rien n'est enregistré.</p>
+  <p id="note">L'adresse complète est dans le champ ci-dessous :</p>
+  <textarea id="url" readonly></textarea>
+  <div>
+    <button id="copier">Copier l'adresse</button>
+    <span class="etat" id="etat"></span>
+  </div>
+  <script>
+    const champ = document.getElementById('url');
+    const etat = document.getElementById('etat');
+    const note = document.getElementById('note');
+    champ.value = location.href;
+    if (!location.search.includes('code=')) {
+      note.textContent = "Aucun code d'autorisation dans l'adresse. Si tu arrives ici sans être "
+        + "passé par l'écran de la banque, c'est normal : c'est une page de retour.";
+      note.className = 'vide';
+    }
+    document.getElementById('copier').addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(champ.value); etat.textContent = 'Copié.'; }
+      catch (e) { champ.select(); document.execCommand('copy'); etat.textContent = 'Copié.'; }
+    });
+  </script>
+</body>
+</html>
